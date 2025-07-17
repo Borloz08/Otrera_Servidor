@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro Encuesta</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Bienvenido a Otrera</h1>
+    <p>Por favor completa los siguientes datos para iniciar la encuesta</p>
+    <form id="registro-form">
+      <label for="nombre">Nombre completo:</label>
+      <input type="text" id="nombre" name="nombre" required />
+
+      <label for="pais">País:</label>
+      <input type="text" id="pais" name="pais" required />
+
+      <label for="telefono">Número de teléfono (incluye código de país):</label>
+      <input type="tel" id="telefono" name="telefono" required />
+
+      <button type="submit">Registrarse</button>
+    </form>
+    <div id="mensaje"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

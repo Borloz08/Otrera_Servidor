@@ -1,0 +1,34 @@
+# Node modules (no subir dependencias instaladas)
+node_modules/
+
+# Archivos de entorno
+.env
+
+# Archivos de credenciales o claves privadas
+*.json
+
+# Logs
+logs/
+*.log
+
+# Archivos temporales del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de tu editor de código
+.vscode/
+.idea/
+
+# Archivos Excel de datos generados
+*.xlsx
+
+# Archivos de base de datos locales (si los usas)
+*.sqlite
+*.db
+
+# Carpetas de pruebas o compilación (si aplica)
+dist/
+build/
+
+# Archivos de rebase/conflicto
+*.orig
