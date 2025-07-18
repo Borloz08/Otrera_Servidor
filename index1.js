@@ -12,7 +12,7 @@ const encuestas = {};
 
 // --- Configuración de Google Sheets ---
 const SHEET_ID = '1mTQPJBOCKFo6UuDzBauqQpvW5faoQK_mcgxlK529mIM';
-const GOOGLE_CREDENTIALS = require('./whatsapp-otrera-8c8fc9174669.json');
+const GOOGLE_CREDENTIALS = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
 
 const auth = new google.auth.GoogleAuth({
   credentials: GOOGLE_CREDENTIALS,
