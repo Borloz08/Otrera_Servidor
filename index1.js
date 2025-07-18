@@ -853,29 +853,29 @@ const listaEstados = Object.keys(estadoMunicipios);
 
 // --- Preguntas ---
 const preguntasGenerales = [
-  "¿Cuántos años tiene?",
-  "Por favor indique su género\n1) Hombre\n2) Mujer\n3) Otro",
-  "Escoja el estado de México en el que vive:",
-  "Seleccione el municipio donde vive:",
-  "¿Cuál es su estado civil?\n1) Soltero\n2) Casado\n3) Divorciado\n4) Viudo\n5) Cónyuge\n99) NC",
-  "¿Hasta qué año aprobó en la escuela?\n1) Ninguno\n2) Preescolar\n3) Primaria\n4) Secundaria\n5) Carrera técnica con secundaria terminada\n6) Normal básica\n7) Preparatoria o bachillerato\n8) Carrera técnica con preparatoria\n9) Licenciatura o profesional\n10) Maestría o doctorado\n99) NC"
+  "¿Cuántos años tiene? Indique su edad en números.",
+  "Por favor indique el número que corresponde a la opción de su género\n1) Hombre\n2) Mujer\n3) Otro",
+  "Indique el número que corresponde al estado de México en el que vive:",
+  "Indique el número que corresponde al municipio donde vive:",
+  "Por favor indique el número que corresponde a la opción de su estado civil:\n1) Soltero\n2) Casado\n3) Divorciado\n4) Viudo\n5) Cónyuge\n99) NC",
+  "Indique el número que corresponde a la opción del año hasta el que aprobó la escuela:\n1) Ninguno\n2) Preescolar\n3) Primaria\n4) Secundaria\n5) Carrera técnica con secundaria terminada\n6) Normal básica\n7) Preparatoria o bachillerato\n8) Carrera técnica con preparatoria\n9) Licenciatura o profesional\n10) Maestría o doctorado\n99) NC"
 ];
 
 const preguntasGrupo = {
   tratamiento: {
     7: "El gobierno de Estados Unidos ha amenazado con imponer nuevos aranceles a México, los cuales afectarían mucho la economía de nuestro país, a menos que México acepte negociar un nuevo acuerdo de seguridad. En una escala de 0 al 10 (siendo 0 totalmente en contra y 10 totalmente a favor) ¿qué tan en contra o a favor está de que México negocie un acuerdo de seguridad con Estados Unidos?",
     "8_variantes": [
-      "¿Y qué tan en contra o a favor estaría de que una de las condiciones de dicho acuerdo fuera que México se comprometa a extraditar los narcotraficantes más buscados, es decir enviarlos a Estados Unidos?",
-      "¿Y qué tan en contra o a favor estaría de que una de las condiciones de dicho acuerdo fuera que México se comprometa a permitir que Estados Unidos use drones para vigilar a los carteles mexicanos?",
-      "¿Y qué tan en contra o a favor estaría de que una de las condiciones de dicho acuerdo fuera que México se comprometa a permitir la entrada de tropas estadounidenses en territorio mexicano para asegurar la frontera?"
+      "En una escala de 0 al 10 (siendo 0 totalmente en contra y 10 totalmente a favor) ¿Qué tan en contra o a favor estaría de que una de las condiciones de dicho acuerdo fuera que México se comprometa a extraditar los narcotraficantes más buscados, es decir enviarlos a Estados Unidos?",
+      "En una escala de 0 al 10 (siendo 0 totalmente en contra y 10 totalmente a favor) ¿Qué tan en contra o a favor estaría de que una de las condiciones de dicho acuerdo fuera que México se comprometa a permitir que Estados Unidos use drones para vigilar a los carteles mexicanos?",
+      "En una escala de 0 al 10 (siendo 0 totalmente en contra y 10 totalmente a favor) ¿Qué tan en contra o a favor estaría de que una de las condiciones de dicho acuerdo fuera que México se comprometa a permitir la entrada de tropas estadounidenses en territorio mexicano para asegurar la frontera?"
     ]
   },
   control: {
     7: "En una escala de 0 al 10 (siendo 0 totalmente en contra y 10 totalmente a favor) ¿Qué tan en contra o a favor está de que México negocie un acuerdo de seguridad con Estados Unidos?",
     "8_variantes": [
-      "¿Y qué tan en contra o a favor estaría de que se negocie un acuerdo en el que México se comprometa a extraditar los narcotraficantes más buscados, es decir enviarlos a Estados Unidos?",
-      "¿Y qué tan en contra o a favor estaría de que se negocie un acuerdo en el que México se comprometa a permitir que Estados Unidos use drones para atacar a los carteles mexicanos?",
-      "¿Y qué tan en contra o a favor estaría de que se negocie un acuerdo en el que México se comprometa a permitir la entrada de tropas estadounidenses en territorio mexicano para asegurar la frontera?"
+      "En una escala de 0 al 10 (siendo 0 totalmente en contra y 10 totalmente a favor) ¿Qué tan en contra o a favor estaría de que se negocie un acuerdo en el que México se comprometa a extraditar los narcotraficantes más buscados, es decir enviarlos a Estados Unidos?",
+      "En una escala de 0 al 10 (siendo 0 totalmente en contra y 10 totalmente a favor) ¿Qué tan en contra o a favor estaría de que se negocie un acuerdo en el que México se comprometa a permitir que Estados Unidos use drones para atacar a los carteles mexicanos?",
+      "En una escala de 0 al 10 (siendo 0 totalmente en contra y 10 totalmente a favor) ¿Qué tan en contra o a favor estaría de que se negocie un acuerdo en el que México se comprometa a permitir la entrada de tropas estadounidenses en territorio mexicano para asegurar la frontera?"
     ]
   }
 };
@@ -959,6 +959,7 @@ async function guardarRespuesta(estado, chatId) {
 // --- Validaciones ---
 function validarRespuesta(i, texto, estado = {}) {
   const num = parseInt(texto);
+  if ([0].includes(i)) return !isNaN(num) && num >= 18 && num <= 100;
   if ([1].includes(i)) return [1, 2, 3].includes(num);
   if ([4].includes(i)) return [1, 2, 3, 4, 5, 99].includes(num);
   if ([5].includes(i)) return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 99].includes(num);
@@ -967,73 +968,6 @@ function validarRespuesta(i, texto, estado = {}) {
   if (i === 3 && estado.municipios) return num >= 1 && num <= estado.municipios.length;
   return true;
 }
-
-// // --- Encuesta WhatsApp ---
-// client.on('message', async message => {
-//   const chatId = message.from;
-//   const estado = estados[chatId];
-//   if (!estado) return;
-
-//   const respuesta = message.body.trim();
-
-//   if (estado.indice === -1) {
-//     if (/^comenzar$|^c$/i.test(respuesta)) {
-//       estado.indice = 0;
-//     } else {
-//       return client.sendMessage(chatId, `Por favor escriba "Comenzar" o "C" para iniciar la encuesta.`);
-//     }
-//   } else if (/^regresar$/i.test(respuesta)) {
-//     if (estado.indice > 0) {
-//       estado.indice--;
-//       estado.respuestas.pop();
-//     } else {
-//       return client.sendMessage(chatId, `Ya estás en la primera pregunta.`);
-//     }
-//   } else {
-//     const i = estado.indice;
-//     if (!validarRespuesta(i, respuesta, estado)) {
-//       return client.sendMessage(chatId, `❌ Respuesta inválida. Por favor responda con una opción válida.`);
-//     }
-
-//     if (i === 2) {
-//       const index = parseInt(respuesta);
-//       estado.estadoSeleccionado = listaEstados[index - 1];
-//       estado.municipios = estadoMunicipios[estado.estadoSeleccionado];
-//       estado.respuestas.push(estado.estadoSeleccionado);
-//     } else if (i === 3) {
-//       const index = parseInt(respuesta);
-//       estado.respuestas.push(estado.municipios[index - 1]);
-//     } else if (i >= 7 && i <= 9) {
-//       estado.ordenP8[i - 7].respuesta = respuesta;
-//     } else {
-//       estado.respuestas.push(respuesta);
-//     }
-
-//     estado.indice++;
-//   }
-
-//   const i = estado.indice;
-//   if (i === 2) {
-//     let texto = `P3. ${estado.nombre}, escoja el estado:\n`;
-//     listaEstados.forEach((e, idx) => texto += `${idx + 1}) ${e}\n`);
-//     return client.sendMessage(chatId, texto);
-//   } else if (i === 3) {
-//     let texto = `P4. ${estado.nombre}, seleccione el municipio:\n`;
-//     estado.municipios.forEach((m, idx) => texto += `${idx + 1}) ${m}\n`);
-//     return client.sendMessage(chatId, texto);
-//   } else if (i < preguntasGenerales.length) {
-//     return client.sendMessage(chatId, `P${i + 1}. ${estado.nombre}, ${preguntasGenerales[i]}`);
-//   } else if (i === preguntasGenerales.length) {
-//     return client.sendMessage(chatId, `P7. ${estado.nombre}, ${preguntasGrupo[estado.grupo][7]}`);
-//   } else if (i >= preguntasGenerales.length + 1 && i <= preguntasGenerales.length + 3) {
-//     const idx = i - preguntasGenerales.length - 1;
-//     return client.sendMessage(chatId, `P${i + 1}. ${estado.nombre}, ${estado.ordenP8[idx].texto}`);
-//   } else {
-//     await guardarRespuesta(estado, chatId);
-//     delete estados[chatId];
-//     return client.sendMessage(chatId, `✅ ¡Gracias ${estado.nombre} por completar la encuesta!`);
-//   }
-// });
 
 function iniciarEncuesta(numero, nombre, grupo) {
   const chatId = `${numero}@c.us`;
@@ -1099,7 +1033,7 @@ client.on('ready', async () => {
     } else {
       const i = estado.indice;
       if (!validarRespuesta(i, respuesta, estado)) {
-        return client.sendMessage(chatId, `❌ Respuesta inválida. Por favor responda con una opción válida.`);
+        return client.sendMessage(chatId, `❌ Respuesta inválida. Por favor responda según lo solicitado.`);
       }
 
       if (i === 2) {
