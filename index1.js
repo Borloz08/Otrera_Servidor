@@ -249,7 +249,7 @@ async function guardarUsuario(nombre, pais, telefono) {
   return { telefono: telefonoFormateado, grupo };
 }
 
-function iniciarEncuesta(numero, nombre, grupo) {
+async function iniciarEncuesta(numero, nombre, grupo) {
   const chatId = `${numero}@c.us`;
   const variantes = preguntasGrupo[grupo]["8_variantes"].slice();
   const aleatorias = [];
@@ -274,8 +274,20 @@ function iniciarEncuesta(numero, nombre, grupo) {
   };
 
   const saludo = `Hola ${nombre}, bienvenido a la encuesta realizada por Otrera.\nSe presentarán ${preguntas.length} preguntas. Si deseas regresar a una pregunta anterior escribe "Regresar".\n\nCuando desees comenzar, escribe "Comenzar" o "C"`;
-  client.sendMessage(chatId, saludo);
+
+  try {
+    // Asegura que esté conectado
+    const estado = await client.getState();
+    if (estado === 'CONNECTED') {
+      await client.sendMessage(chatId, saludo);
+    } else {
+      console.error('⚠️ Cliente de WhatsApp no está conectado aún');
+    }
+  } catch (err) {
+    console.error('❌ Error al enviar el primer mensaje de encuesta:', err);
+  }
 }
+
 
 async function guardarRespuestas(nombre, numero, grupo, respuestas) {
   const fila = [nombre, numero, grupo, ...respuestas];
