@@ -33,7 +33,7 @@ async function guardarUsuario(nombre, pais, telefono) {
   // Obtener todas las filas actuales
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: 'Usuarios WhatsApp Otrera!A2:D',
+    range: 'Usuarios-WhatsApp-Otrera!A2:D',
   });
 
   const filas = res.data.values || [];
@@ -44,7 +44,7 @@ async function guardarUsuario(nombre, pais, telefono) {
     filas[index] = [nombre, pais, telefonoFormateado, grupo];
     await sheets.spreadsheets.values.update({
       spreadsheetId: SHEET_ID,
-      range: `Usuarios WhatsApp Otrera!A${index + 2}:D${index + 2}`,
+      range: `Usuarios-WhatsApp-Otrera!A${index + 2}:D${index + 2}`,
       valueInputOption: 'RAW',
       requestBody: { values: [filas[index]] }
     });
@@ -52,7 +52,7 @@ async function guardarUsuario(nombre, pais, telefono) {
     // Insertar
     await sheets.spreadsheets.values.append({
       spreadsheetId: SHEET_ID,
-      range: 'Usuarios WhatsApp Otrera!A2:D',
+      range: 'Usuarios-WhatsApp-Otrera!A2:D',
       valueInputOption: 'RAW',
       insertDataOption: 'INSERT_ROWS',
       requestBody: {
