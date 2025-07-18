@@ -959,72 +959,72 @@ function validarRespuesta(i, texto, estado = {}) {
   return true;
 }
 
-// --- Encuesta WhatsApp ---
-client.on('message', async message => {
-  const chatId = message.from;
-  const estado = estados[chatId];
-  if (!estado) return;
+// // --- Encuesta WhatsApp ---
+// client.on('message', async message => {
+//   const chatId = message.from;
+//   const estado = estados[chatId];
+//   if (!estado) return;
 
-  const respuesta = message.body.trim();
+//   const respuesta = message.body.trim();
 
-  if (estado.indice === -1) {
-    if (/^comenzar$|^c$/i.test(respuesta)) {
-      estado.indice = 0;
-    } else {
-      return client.sendMessage(chatId, `Por favor escriba "Comenzar" o "C" para iniciar la encuesta.`);
-    }
-  } else if (/^regresar$/i.test(respuesta)) {
-    if (estado.indice > 0) {
-      estado.indice--;
-      estado.respuestas.pop();
-    } else {
-      return client.sendMessage(chatId, `Ya estás en la primera pregunta.`);
-    }
-  } else {
-    const i = estado.indice;
-    if (!validarRespuesta(i, respuesta, estado)) {
-      return client.sendMessage(chatId, `❌ Respuesta inválida. Por favor responda con una opción válida.`);
-    }
+//   if (estado.indice === -1) {
+//     if (/^comenzar$|^c$/i.test(respuesta)) {
+//       estado.indice = 0;
+//     } else {
+//       return client.sendMessage(chatId, `Por favor escriba "Comenzar" o "C" para iniciar la encuesta.`);
+//     }
+//   } else if (/^regresar$/i.test(respuesta)) {
+//     if (estado.indice > 0) {
+//       estado.indice--;
+//       estado.respuestas.pop();
+//     } else {
+//       return client.sendMessage(chatId, `Ya estás en la primera pregunta.`);
+//     }
+//   } else {
+//     const i = estado.indice;
+//     if (!validarRespuesta(i, respuesta, estado)) {
+//       return client.sendMessage(chatId, `❌ Respuesta inválida. Por favor responda con una opción válida.`);
+//     }
 
-    if (i === 2) {
-      const index = parseInt(respuesta);
-      estado.estadoSeleccionado = listaEstados[index - 1];
-      estado.municipios = estadoMunicipios[estado.estadoSeleccionado];
-      estado.respuestas.push(estado.estadoSeleccionado);
-    } else if (i === 3) {
-      const index = parseInt(respuesta);
-      estado.respuestas.push(estado.municipios[index - 1]);
-    } else if (i >= 7 && i <= 9) {
-      estado.ordenP8[i - 7].respuesta = respuesta;
-    } else {
-      estado.respuestas.push(respuesta);
-    }
+//     if (i === 2) {
+//       const index = parseInt(respuesta);
+//       estado.estadoSeleccionado = listaEstados[index - 1];
+//       estado.municipios = estadoMunicipios[estado.estadoSeleccionado];
+//       estado.respuestas.push(estado.estadoSeleccionado);
+//     } else if (i === 3) {
+//       const index = parseInt(respuesta);
+//       estado.respuestas.push(estado.municipios[index - 1]);
+//     } else if (i >= 7 && i <= 9) {
+//       estado.ordenP8[i - 7].respuesta = respuesta;
+//     } else {
+//       estado.respuestas.push(respuesta);
+//     }
 
-    estado.indice++;
-  }
+//     estado.indice++;
+//   }
 
-  const i = estado.indice;
-  if (i === 2) {
-    let texto = `P3. ${estado.nombre}, escoja el estado:\n`;
-    listaEstados.forEach((e, idx) => texto += `${idx + 1}) ${e}\n`);
-    return client.sendMessage(chatId, texto);
-  } else if (i === 3) {
-    let texto = `P4. ${estado.nombre}, seleccione el municipio:\n`;
-    estado.municipios.forEach((m, idx) => texto += `${idx + 1}) ${m}\n`);
-    return client.sendMessage(chatId, texto);
-  } else if (i < preguntasGenerales.length) {
-    return client.sendMessage(chatId, `P${i + 1}. ${estado.nombre}, ${preguntasGenerales[i]}`);
-  } else if (i === preguntasGenerales.length) {
-    return client.sendMessage(chatId, `P7. ${estado.nombre}, ${preguntasGrupo[estado.grupo][7]}`);
-  } else if (i >= preguntasGenerales.length + 1 && i <= preguntasGenerales.length + 3) {
-    const idx = i - preguntasGenerales.length - 1;
-    return client.sendMessage(chatId, `P${i + 1}. ${estado.nombre}, ${estado.ordenP8[idx].texto}`);
-  } else {
-    await guardarRespuesta(estado, chatId);
-    delete estados[chatId];
-    return client.sendMessage(chatId, `✅ ¡Gracias ${estado.nombre} por completar la encuesta!`);
-  }
-});
+//   const i = estado.indice;
+//   if (i === 2) {
+//     let texto = `P3. ${estado.nombre}, escoja el estado:\n`;
+//     listaEstados.forEach((e, idx) => texto += `${idx + 1}) ${e}\n`);
+//     return client.sendMessage(chatId, texto);
+//   } else if (i === 3) {
+//     let texto = `P4. ${estado.nombre}, seleccione el municipio:\n`;
+//     estado.municipios.forEach((m, idx) => texto += `${idx + 1}) ${m}\n`);
+//     return client.sendMessage(chatId, texto);
+//   } else if (i < preguntasGenerales.length) {
+//     return client.sendMessage(chatId, `P${i + 1}. ${estado.nombre}, ${preguntasGenerales[i]}`);
+//   } else if (i === preguntasGenerales.length) {
+//     return client.sendMessage(chatId, `P7. ${estado.nombre}, ${preguntasGrupo[estado.grupo][7]}`);
+//   } else if (i >= preguntasGenerales.length + 1 && i <= preguntasGenerales.length + 3) {
+//     const idx = i - preguntasGenerales.length - 1;
+//     return client.sendMessage(chatId, `P${i + 1}. ${estado.nombre}, ${estado.ordenP8[idx].texto}`);
+//   } else {
+//     await guardarRespuesta(estado, chatId);
+//     delete estados[chatId];
+//     return client.sendMessage(chatId, `✅ ¡Gracias ${estado.nombre} por completar la encuesta!`);
+//   }
+// });
 
 function iniciarEncuesta(numero, nombre, grupo) {
   const chatId = `${numero}@c.us`;
@@ -1064,7 +1064,76 @@ app.post('/api/registrar', async (req, res) => {
 
 // --- Inicialización ---
 client.on('qr', qr => qrcode.generate(qr, { small: true }));
-client.on('ready', () => console.log('✅ Bot de WhatsApp listo'));
+client.on('ready', async () => {
+  console.log('✅ Cliente de WhatsApp listo');
+
+  client.on('message', async message => {
+    const chatId = message.from;
+    const estado = estados[chatId];
+    if (!estado) return;
+
+    const respuesta = message.body.trim();
+
+    if (estado.indice === -1) {
+      if (/^comenzar$|^c$/i.test(respuesta)) {
+        estado.indice = 0;
+      } else {
+        return client.sendMessage(chatId, `Por favor escriba "Comenzar" o "C" para iniciar la encuesta.`);
+      }
+    } else if (/^regresar$/i.test(respuesta)) {
+      if (estado.indice > 0) {
+        estado.indice--;
+        estado.respuestas.pop();
+      } else {
+        return client.sendMessage(chatId, `Ya estás en la primera pregunta.`);
+      }
+    } else {
+      const i = estado.indice;
+      if (!validarRespuesta(i, respuesta, estado)) {
+        return client.sendMessage(chatId, `❌ Respuesta inválida. Por favor responda con una opción válida.`);
+      }
+
+      if (i === 2) {
+        const index = parseInt(respuesta);
+        estado.estadoSeleccionado = listaEstados[index - 1];
+        estado.municipios = estadoMunicipios[estado.estadoSeleccionado];
+        estado.respuestas.push(estado.estadoSeleccionado);
+      } else if (i === 3) {
+        const index = parseInt(respuesta);
+        estado.respuestas.push(estado.municipios[index - 1]);
+      } else if (i >= 7 && i <= 9) {
+        estado.ordenP8[i - 7].respuesta = respuesta;
+      } else {
+        estado.respuestas.push(respuesta);
+      }
+
+      estado.indice++;
+    }
+
+    const i = estado.indice;
+    if (i === 2) {
+      let texto = `P3. ${estado.nombre}, escoja el estado:\n`;
+      listaEstados.forEach((e, idx) => texto += `${idx + 1}) ${e}\n`);
+      return client.sendMessage(chatId, texto);
+    } else if (i === 3) {
+      let texto = `P4. ${estado.nombre}, seleccione el municipio:\n`;
+      estado.municipios.forEach((m, idx) => texto += `${idx + 1}) ${m}\n`);
+      return client.sendMessage(chatId, texto);
+    } else if (i < preguntasGenerales.length) {
+      return client.sendMessage(chatId, `P${i + 1}. ${estado.nombre}, ${preguntasGenerales[i]}`);
+    } else if (i === preguntasGenerales.length) {
+      return client.sendMessage(chatId, `P7. ${estado.nombre}, ${preguntasGrupo[estado.grupo][7]}`);
+    } else if (i >= preguntasGenerales.length + 1 && i <= preguntasGenerales.length + 3) {
+      const idx = i - preguntasGenerales.length - 1;
+      return client.sendMessage(chatId, `P${i + 1}. ${estado.nombre}, ${estado.ordenP8[idx].texto}`);
+    } else {
+      await guardarRespuesta(estado, chatId);
+      delete estados[chatId];
+      return client.sendMessage(chatId, `✅ ¡Gracias ${estado.nombre} por completar la encuesta!`);
+    }
+  });
+});
+
 client.initialize();
 
 const PORT = process.env.PORT || 3000;
