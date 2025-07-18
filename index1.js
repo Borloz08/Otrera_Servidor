@@ -929,14 +929,23 @@ async function guardarUsuario(nombre, pais, telefono) {
 
 async function guardarRespuesta(estado, chatId) {
   const timestamp = new Date().toLocaleString('es-MX');
+
+  // Ordena las respuestas aleatorias por su índice original
+  const respuestasOrdenadas = Array(3).fill('');
+  estado.ordenP8.forEach(p => {
+    respuestasOrdenadas[p.index] = p.respuesta || '';
+  });
+
+  // Construye la fila con las respuestas en orden esperado
   const fila = [
     timestamp,
     estado.nombre,
     chatId.replace('@c.us', ''),
     estado.grupo,
-    ...estado.respuestas.slice(0, 7),
-    ...estado.ordenP8.map(p => p.respuesta || '')
+    ...estado.respuestas.slice(0, 7), // P1–P7
+    ...respuestasOrdenadas             // P8.A, P8.B, P8.C
   ];
+
 
   await sheets.spreadsheets.values.append({
     spreadsheetId: SHEET_ID,
@@ -1112,11 +1121,11 @@ client.on('ready', async () => {
 
     const i = estado.indice;
     if (i === 2) {
-      let texto = `P3. ${estado.nombre}, escoja el estado:\n`;
+      let texto = `P3. ${estado.nombre}, escoja el estado donde vive:\n`;
       listaEstados.forEach((e, idx) => texto += `${idx + 1}) ${e}\n`);
       return client.sendMessage(chatId, texto);
     } else if (i === 3) {
-      let texto = `P4. ${estado.nombre}, seleccione el municipio:\n`;
+      let texto = `P4. ${estado.nombre}, seleccione el municipio donde vive:\n`;
       estado.municipios.forEach((m, idx) => texto += `${idx + 1}) ${m}\n`);
       return client.sendMessage(chatId, texto);
     } else if (i < preguntasGenerales.length) {
