@@ -1,22 +1,16 @@
 {
-  "name": "mi-bot-whatsapp",
+  "name": "otrera-whatsapp-bot",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index1.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index1.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "body-parser": "^2.2.0",
+    "express": "^4.18.2",
+    "whatsapp-web.js": "^1.22.1",
+    "xlsx": "^0.18.5",
+    "googleapis": "^133.0.0",
     "cors": "^2.8.5",
-    "express": "^5.1.0",
-    "google-spreadsheet": "^4.1.5",
-    "googleapis": "^153.0.0",
-    "qrcode-terminal": "^0.12.0",
-    "whatsapp-web.js": "^1.31.0",
-    "xlsx": "^0.18.5"
+    "body-parser": "^1.20.2"
   }
 }
