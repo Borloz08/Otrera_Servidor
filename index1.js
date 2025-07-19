@@ -890,7 +890,7 @@ const auth = new google.auth.GoogleAuth({
 const sheets = google.sheets({ version: 'v4', auth });
 
 async function guardarUsuario(nombre, pais, telefono) {
-  const codigos = { 'Costa Rica': '506', 'México': '521' };
+  const codigos = { 'Costa Rica': '506', 'México': '521' , 'Estados Unidos': '1' };
   const numero = telefono.replace(/\D/g, '');
   const telefonoFormateado = numero.startsWith(codigos[pais])
     ? numero
